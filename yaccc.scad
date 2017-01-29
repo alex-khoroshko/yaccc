@@ -3,6 +3,7 @@ width = 50;
 link_pivot_angle1 = 0;
 link_pivot_angle2 = 45;
 tight_clearance = 0.2;
+loose_clearance = 0.5;
 
 
 
@@ -18,7 +19,7 @@ link_width = height + arm_dia;
 link_length = link_width * 2;//2 radius ends 0.5w each plus 2w between axes
 lesser_dia = link_width - 2*wall_thickness;
 
-
+$fn = 50;
 
 link_external_wHole();
 
@@ -36,6 +37,7 @@ arm_pin(0);
 }
 
 module link_external_wHole () {
+mirror([1,0])
 difference () {
 link ();
 arm_pin(1);
