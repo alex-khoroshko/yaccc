@@ -29,13 +29,16 @@ link_external_wPin ();
 translate ([(link_width + arm_dia + 1.0)*2,0])
 link_internal ();
 
+translate ([(link_width + arm_dia + 1.0)*3,0])
+link_internal ();
+
 
 module link_external_wPin () {
 union () {
 link ();
-arm_pin(0);
+arm_pin(0,0);
 mirror([1,0])
-arm_pin(0);
+arm_pin(0,0);
 }
 }
 
@@ -43,31 +46,27 @@ module link_external_wHole () {
 mirror([1,0])
 difference () {
 link ();
-arm_pin(1);
+arm_pin(1,0);
 mirror([1,0])
-arm_pin(1);
+arm_pin(1,0);
 }
 }
 
 module arm_pins (shape) {
-    arm_pin(shape);
+    arm_pin(shape,0);
     mirror([1,0])
-    arm_pin(shape);
+    arm_pin(shape,0);
 }
 
-module arm_pin (shape){/*0- pin, 1 - hole*/
-translate ([0,0,width/2-shape*arm_pin_length])
+module arm_pin (shape, len_t){
+    /*shape: 0- pin, 1 - hole*/
+    /*len_t: 0- normal, 1 - short*/
+translate ([0,0,width/2-shape*arm_pin_length - (len_t * (loose_clearance + wall_thickness))])
 linear_extrude(arm_pin_length)
 translate ([link_width/2,0])
-circle(d=arm_dia/2+tight_clearance);
+circle(d=arm_dia/2+tight_clearance*shape);
 }
 
-
-/*translate ([0,0,width/2])
-linear_extrude(arm_pin_length)
-translate ([link_width/2,0])
-circle(d=arm_dia/2+tight_clearance);
-*/
 
 module link () {
 linear_extrude(wall_thickness)
@@ -97,11 +96,11 @@ translate([0,-link_width])
 circle(d=center_dia);
 }
 
-arm_base ();
+arm_base (0);
 }
 
-module arm_base () {
-linear_extrude(width*0.5)
+module arm_base (len_t) {
+linear_extrude(width*0.5 - (len_t * (loose_clearance + wall_thickness)))
 union() {
 translate([link_width*0.5,0])
 circle(d=arm_dia);
@@ -145,10 +144,10 @@ circle(d=center_dia+loose_clearance);
 module link_internal () {
 base_internal ();
 difference () {
-arm_base ();
-arm_pin(1);
+arm_base (1);
+arm_pin(1,1);
 }
 //link ();
 mirror([1,0])
-arm_pin(0);
+arm_pin(0,1);
 }
