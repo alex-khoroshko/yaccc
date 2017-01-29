@@ -10,7 +10,7 @@ loose_clearance = 0.5;
 arm_dia = 6;
 arm_pin_length = 10;
 wall_thickness = 2;
-center_dia = 5;
+center_dia = 6;
 
 
 
@@ -25,6 +25,9 @@ link_external_wHole();
 
 translate ([link_width + arm_dia + 1,0])
 link_external_wPin ();
+
+translate ([(link_width + arm_dia + 1.0)*2,0])
+link_internal ();
 
 
 module link_external_wPin () {
@@ -94,6 +97,10 @@ translate([0,-link_width])
 circle(d=center_dia);
 }
 
+arm_base ();
+}
+
+module arm_base () {
 linear_extrude(width*0.5)
 union() {
 translate([link_width*0.5,0])
@@ -116,4 +123,32 @@ translate ([0,-link_width])
 //defines angles joints would pivot
 module pivot_cutout () {
 polygon(points = [[link_width,link_width-link_width/2*tan(link_pivot_angle1)],[0,link_width],[-link_width,link_width-link_width/2*tan(link_pivot_angle2)],[-link_width,0],[link_width,0]]);
+}
+
+module base_internal () {
+linear_extrude(wall_thickness)
+difference () {
+union () {
+square([link_width,link_length],true);
+translate ([0,link_width])
+circle(d=lesser_dia-loose_clearance);
+translate ([0,-link_width])
+circle(d=lesser_dia-loose_clearance);
+}
+translate ([0,link_width])
+circle(d=center_dia+loose_clearance);
+translate ([0,-link_width])
+circle(d=center_dia+loose_clearance);
+}    
+}
+
+module link_internal () {
+base_internal ();
+difference () {
+arm_base ();
+arm_pin(1);
+}
+//link ();
+mirror([1,0])
+arm_pin(0);
 }
