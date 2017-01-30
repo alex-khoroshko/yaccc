@@ -3,14 +3,14 @@ width = 50;
 link_pivot_angle1 = 0;
 link_pivot_angle2 = 45;
 tight_clearance = 0.2;
-loose_clearance = 0.5;
+loose_clearance = 0.7;
 
 
 
-arm_dia = 6;
+arm_dia = 10;
 arm_pin_length = 10;
-wall_thickness = 2;
-center_dia = 6;
+wall_thickness = 3;
+center_dia = 7;
 
 
 
@@ -61,7 +61,7 @@ module arm_pins (shape) {
 module arm_pin (shape, len_t){
     /*shape: 0- pin, 1 - hole*/
     /*len_t: 0- normal, 1 - short*/
-translate ([0,0,width/2-shape*arm_pin_length - (len_t * (loose_clearance + wall_thickness))])
+translate ([0,0,width/2-shape*arm_pin_length - (len_t * (loose_clearance*0.5 + wall_thickness))])
 linear_extrude(arm_pin_length)
 translate ([link_width/2,0])
 circle(d=arm_dia/2+tight_clearance*shape);
@@ -100,7 +100,7 @@ arm_base (0);
 }
 
 module arm_base (len_t) {
-linear_extrude(width*0.5 - (len_t * (loose_clearance + wall_thickness)))
+linear_extrude(width*0.5 - (len_t * (0.5*loose_clearance + wall_thickness)))
 union() {
 translate([link_width*0.5,0])
 circle(d=arm_dia);
@@ -121,7 +121,7 @@ translate ([0,-link_width])
 
 //defines angles joints would pivot
 module pivot_cutout () {
-polygon(points = [[link_width,link_width-link_width/2*tan(link_pivot_angle1)],[0,link_width],[-link_width,link_width-link_width/2*tan(link_pivot_angle2)],[-link_width,0],[link_width,0]]);
+polygon(points = [[link_width*0.5,link_width-link_width/2*tan(link_pivot_angle1)],[0,link_width],[-link_width*0.5,link_width-link_width/2*tan(link_pivot_angle2)],[-link_width*0.5,0],[link_width*0.5,0]]);
 }
 
 module base_internal () {
