@@ -1,5 +1,5 @@
-height = 12;
-width = 50;
+height = 13;
+width = 52;
 link_pivot_angle1 = 0;
 link_pivot_angle2 = 45;
 tight_clearance = 0.2;
@@ -8,7 +8,8 @@ loose_clearance = 0.7;
 
 
 arm_dia = 10;
-arm_pin_length = 10;
+arm_pin_length = arm_dia;
+arm_pin_dia = arm_dia * 2 / 3;
 wall_thickness = 3;
 center_dia = 7;
 
@@ -62,9 +63,9 @@ module arm_pin (shape, len_t){
     /*shape: 0- pin, 1 - hole*/
     /*len_t: 0- normal, 1 - short*/
 translate ([0,0,width/2-shape*arm_pin_length - (len_t * (loose_clearance*0.5 + wall_thickness))])
-linear_extrude(arm_pin_length)
+linear_extrude(arm_pin_length - loose_clearance * (1-shape))
 translate ([link_width/2,0])
-circle(d=arm_dia/2+tight_clearance*shape);
+circle(d=arm_pin_dia+tight_clearance*shape);
 }
 
 
