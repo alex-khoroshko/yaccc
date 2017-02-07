@@ -65,7 +65,11 @@ module arm_pin (shape, len_t){
 translate ([0,0,width/2-shape*arm_pin_length - (len_t * (loose_clearance*0.5 + wall_thickness))])
 linear_extrude(arm_pin_length - loose_clearance * (1-shape))
 translate ([link_width/2,0])
-circle(d=arm_pin_dia+tight_clearance*shape);
+if (shape) {
+   circle(d=arm_pin_dia+tight_clearance); 
+} else {
+hex(d=arm_pin_dia+tight_clearance*shape);
+}
 }
 
 
@@ -151,4 +155,9 @@ arm_pin(1,1);
 //link ();
 mirror([1,0])
 arm_pin(0,1);
+}
+
+module hex (d){
+    hex_rad = d / 2;
+polygon(points = [[hex_rad,0],[hex_rad*cos(60),-hex_rad*sin(60)],[-hex_rad*cos(60),-hex_rad*sin(60)],[-hex_rad,0],[-hex_rad*cos(60),hex_rad*sin(60)],[hex_rad*cos(60),hex_rad*sin(60)]]);
 }
